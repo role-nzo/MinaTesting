@@ -16,7 +16,7 @@ Il test ([`tictactoe\src\run.ts`](https://github.com/role-nzo/MinaTesting/blob/m
 - transazione per la quinta mossa (giocatore 1)
 - controllo (sullo stato locale, nessuna transazione!) del vincitore
 
-La funzione di "prove" associata ad ogni transazione è profilata. L'output sarà quindi un file `.cpuprofile` che può essere aperto dal profiler JS di Chrome (deprecato):
+La funzione di "prove" associata ad ogni transazione è profilata. L'output sarà quindi un file `.cpuprofile` che può essere aperto da VS Code o dal profiler JS di Chrome (deprecato):
 - apreire [`chrome://inspect`](chrome://inspect)
 - Cliccare "Open dedicated DevTools for Node"
 - Selezionare il tab "Profili"
@@ -39,3 +39,41 @@ Shorthand (compilazione ed esecuzione):
 ```
 npm run build && npm run start
 ```
+
+È possibile verificare tutte le transazioni di un indirizzo utilizzando l'explorer': [https://berkeley.minaexplorer.com/wallet/<_indirizzo_>](https://berkeley.minaexplorer.com/)
+
+## Come eseguire test sulla EVM (Binance Smart Chain)
+
+Il test sviluppato in proprio prevede:
+- transazione (sincrona) per nuovo gioco
+- transazione (asincrona) per nuovo gioco (per scopi di profiling - durante il profiling NON si attende l'aggiunta del nuovo blocco)
+- transazione per la prima mossa (giocatore 1)
+- transazione per la seconda mossa (giocatore 2)
+- transazione per la terza mossa (giocatore 1)
+- transazione per la quarta mossa (giocatore 2)
+- transazione per la quinta mossa (giocatore 1)
+- controllo stato giocatore 1 (sullo stato remoto ma essendo di sola lettura non è necessaria una transazione!)
+- controllo stato giocatore 2 (idem)
+- transazione per la sesta mossa (giocatore 2), viene gestito il revert (fallimento) in quanto il gioco è terminato
+
+È disponibile una guida specifica della suite Truffle utilizzata in [`/ethereum/README.md`](ethereum\README.md).
+
+In breve:
+- rinominare il file `.env.tmp` in `.env`
+- inserire il mnemonic (12/24 word phrase) da cui verranno generati 10 indirizzi
+```
+MNEMONIC="<word_1> ... <word_n>"
+```
+- inserire, senza apici, l'indice del giocatore uno (da 0 a 9, default 0) e l'indice del giocatore due (da 0 a 9, default 1)
+```
+player0=<giocatore_0>
+player1=<giocatore_1>
+```
+- eseguire
+```
+truffle test --config=truffle-config.bsc.js --network="bscTestnet"
+```
+
+Per questione di semplicità il deployer del contratto coinciderà con il player 0.
+
+È possibile verificare tutte le transazioni di un indirizzo utilizzando l'utilissimo e popolarissimo scanner: [https://testnet.bscscan.com/address/<_indirizzo_>](https://testnet.bscscan.com/)

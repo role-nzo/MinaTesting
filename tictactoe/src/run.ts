@@ -44,7 +44,7 @@ let { verificationKey } = await TicTacToe.compile();
 //STOP PROFILING compile
 let profile = v8Profiler.stopProfiling(title);
 profile.export(function (error: any, result: any) {
-  fs.writeFileSync(`${title}.cpuprofile`, result);
+  fs.writeFileSync(`./profiles/${title}.cpuprofile`, result);
   profile.delete();
 });
 
@@ -61,7 +61,7 @@ await fetchAccount({ publicKey: player2 });
 //STOP PROFILING fetching
 profile = v8Profiler.stopProfiling(title);
 profile.export(function (error: any, result: any) {
-  fs.writeFileSync(`${title}.cpuprofile`, result);
+  fs.writeFileSync(`./profiles/${title}.cpuprofile`, result);
   profile.delete();
 });
 
@@ -82,7 +82,7 @@ await deploy(player1Key, zkAppPrivateKey, zkApp, verificationKey);
 //START PROFILING deploy transaction
 profile = v8Profiler.stopProfiling(title);
 profile.export(function (error: any, result: any) {
-  fs.writeFileSync(`${title}.cpuprofile`, result);
+  fs.writeFileSync(`./profiles/${title}.cpuprofile`, result);
   profile.delete();
 });
 
@@ -115,7 +115,7 @@ await txn.prove();
 //STOP PROFILING start game prove
 profile = v8Profiler.stopProfiling(title);
 profile.export(function (error: any, result: any) {
-  fs.writeFileSync(`${title}.cpuprofile`, result);
+  fs.writeFileSync(`./profiles/${title}.cpuprofile`, result);
   profile.delete();
 });
 
@@ -236,7 +236,7 @@ async function makeMove(
     //STOP PROFILING play prove
     profile = v8Profiler.stopProfiling(title);
     profile.export(function (error: any, result: any) {
-      fs.writeFileSync(`${title}.cpuprofile`, result);
+      fs.writeFileSync(`./profiles/${title}.cpuprofile`, result);
       profile.delete();
     });
   });
