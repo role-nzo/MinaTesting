@@ -40,11 +40,11 @@ Shorthand (compilazione ed esecuzione):
 npm run build && npm run start
 ```
 
-È possibile verificare tutte le transazioni di un indirizzo utilizzando l'explorer': [https://berkeley.minaexplorer.com/wallet/<_indirizzo_>](https://berkeley.minaexplorer.com/)
+È possibile verificare tutte le transazioni di un indirizzo utilizzando l'explorer: [https://berkeley.minaexplorer.com/wallet/<_indirizzo_>](https://berkeley.minaexplorer.com/)
 
 ## Come eseguire test sulla EVM (Binance Smart Chain)
 
-Il test sviluppato in proprio prevede:
+Il test sviluppato prevede:
 - transazione (sincrona) per nuovo gioco
 - transazione (asincrona) per nuovo gioco (per scopi di profiling - durante il profiling NON si attende l'aggiunta del nuovo blocco)
 - transazione per la prima mossa (giocatore 1)
