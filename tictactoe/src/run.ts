@@ -1,15 +1,3 @@
-/**
- * This file specifies how to run the `TicTacToe` smart contract locally using the `Mina.LocalBlockchain()` method.
- * The `Mina.LocalBlockchain()` method specifies a ledger of accounts and contains logic for updating the ledger.
- *
- * Please note that this deployment is local and does not deploy to a live network.
- * If you wish to deploy to a live network, please use the zkapp-cli to deploy.
- *
- * To run locally:
- * Build the project: `$ npm run build`
- * Run with node:     `$ node build/src/run.js`.
- */
-
 import {
   Field,
   PrivateKey,
@@ -35,159 +23,111 @@ let Local = Mina.Network('https://proxy.berkeley.minaexplorer.com/graphql');
 //let Local = Mina.LocalBlockchain({ proofsEnabled: false });
 Mina.setActiveInstance(Local);
 
-let player1Key: PrivateKey = PrivateKey.fromBase58("EKEqP9Nmy8b1swxoTFmY7sHc7YkUmN8ZvihhnmMs6Ab8QxBgKKCu");
-let player1: PublicKey = player1Key.toPublicKey(); //B62qqsgfiKUsSxUW7FrXqWpC2XWvULjeCfBfyN65cpAmKBjro2qptts
-let player2Key: PrivateKey = PrivateKey.fromBase58("EKFZukJvtCDKSnXVYr7pDKMDW7zKeyosAZGdc8nAWgHV6FU1f38C");
-let player2: PublicKey = player2Key.toPublicKey(); //B62qn93xuYN54t6RgJeHFjw1DmT5J3mkcgkwuD7h2DQeP179ca82B8R
+let player1Key: PrivateKey = PrivateKey.fromBase58("<inserire chiave privata giocatore>");
+let player1: PublicKey = player1Key.toPublicKey();
+let player2Key: PrivateKey = PrivateKey.fromBase58("<inserire chiave privata giocatore>");
+let player2: PublicKey = player2Key.toPublicKey();
 
-//let zkAppPrivateKey: PrivateKey = PrivateKey.fromBase58("EKEMmitg5Dc4ZDZ2xzBvjHgL4rZpfXcbX9dnGpwVPvx5NMQ9Kw8p");
 let zkAppPrivateKey: PrivateKey = PrivateKey.random();
-let zkAppPublicKey: PublicKey = zkAppPrivateKey.toPublicKey(); //B62qqsKqEMAwL7EemMk5t5TKbdD5vHJaePmGvk7NeU6Bp6T6X8Tahz9
+let zkAppPublicKey: PublicKey = zkAppPrivateKey.toPublicKey();
 let zkApp: TicTacToe = new TicTacToe(zkAppPublicKey);
-
-/*await measureTime('Calculating keys', async () => {
-  await measureTime('Player 1 keys', async () => {
-    await measureTime('Private', async () => {
-      player1Key = PrivateKey.fromBase58("EKF93BH4g3UFCk17hUW5wyTTuhmcyrth35yZox1suWxsigAtjSzQ");
-    }, 2);
-
-    await measureTime('Public', async () => {
-      player1 = player1Key.toPublicKey(); //B62qkAvQyCzQhakbvGuTLGu9ctGtij1nTvANrsMHhi74TPTGoQomSHp
-    }, 2);
-  }, 1);
-
-  await measureTime('Player 2 keys', async () => {
-    await measureTime('Private', async () => {
-      player2Key = PrivateKey.fromBase58("EKEpGSrsQq6xQMYrri8pxzgtSE6fuDGKeGLQ2vnmoLeupd81TihX");
-    }, 2);
-
-    await measureTime('Public', async () => {
-      player2 = player2Key.toPublicKey(); //B62qrHYtaRcwzEaLia5XtPmxu3ahBJwktbWmTsA2oJJQEdX9tQZuBh7
-    }, 2);
-  }, 1);
-
-  await measureTime('zkApp', async () => {
-    await measureTime('Private', async () => {
-      zkAppPrivateKey = PrivateKey.fromBase58("EKFVgdHGMEef3tgVmL7QUrpxixTj4LMgj5G92ZbDeF1rxYRztVbs")//PrivateKey.random();
-    }, 2);
-
-    await measureTime('Public', async () => {
-      zkAppPublicKey = zkAppPrivateKey.toPublicKey(); //B62qqD2J7qzG5Z6rUMxWnjw51DEn68JJg6B4gEZoTKXsM8AbE6Q8FUq
-    }, 2);
-    
-    await measureTime('TicTacToe instance', async () => {
-      zkApp = new TicTacToe(zkAppPublicKey);
-    }, 2);
-  }, 1);
-});*/
 
 console.log("Pre compiling")
 
-/*const [
-  { publicKey: , privateKey: pr1 },
-  { publicKey: player2, privateKey: player2Key },
-]*/ //= Local.testAccounts;
-//Local.getAccount
 let title = "ttt-compiling"
-//await measureTime('Compiling', async () => {
+
+//START PROFILING compile
 v8Profiler.startProfiling(title, true);
+
 let { verificationKey } = await TicTacToe.compile();
+
+//STOP PROFILING compile
 let profile = v8Profiler.stopProfiling(title);
 profile.export(function (error: any, result: any) {
-  // if it doesn't have the extension .cpuprofile then
-  // chrome's profiler tool won't like it.
-  // examine the profile:
-  //   Navigate to chrome://inspect
-  //   Click Open dedicated DevTools for Node
-  //   Select the profiler tab
-  //   Load your file
   fs.writeFileSync(`${title}.cpuprofile`, result);
   profile.delete();
 });
-//});
 
-console.log("Pre fetching")
 
-//await measureTime('Fetching accounts', async () => {
 title = "fetching";
+
+//START PROFILING fetching
 v8Profiler.startProfiling(title, true);
+
 await fetchAccount({ publicKey: zkAppPublicKey });
 await fetchAccount({ publicKey: player1 });
 await fetchAccount({ publicKey: player2 });
+
+//STOP PROFILING fetching
 profile = v8Profiler.stopProfiling(title);
 profile.export(function (error: any, result: any) {
   fs.writeFileSync(`${title}.cpuprofile`, result);
   profile.delete();
 });
-//});
 
-// Create a new instance of the contract
+
+
+// Creates a new instance of the contract
 console.log('\n\n====== DEPLOYING ======\n\n');
 
 let txn: any;
 
 title = "deploy transaction";
+
+//START PROFILING deploy transaction (NON ATTENDE L'INSERIMENTO NEL BLOCCO)
 v8Profiler.startProfiling(title, true);
 
 await deploy(player1Key, zkAppPrivateKey, zkApp, verificationKey);
 
+//START PROFILING deploy transaction
 profile = v8Profiler.stopProfiling(title);
 profile.export(function (error: any, result: any) {
   fs.writeFileSync(`${title}.cpuprofile`, result);
   profile.delete();
 });
 
+
+//Attende che il deploy venga inserito in un blocco
 await loopUntilAccountExists({
   account: zkAppPublicKey,
   eachTimeNotExist: () =>
-    console.log('waiting for zkApp account to be deployed...'),
+  console.log('waiting for zkApp account to be deployed...'),
   isZkAppAccount: true,
 });
 
-console.log("Prefetch: " + (Mina.getAccount(player1).nonce.toString()));
-await fetchAccount({ publicKey: player1 });
-console.log("Postfetch: " + (Mina.getAccount(player1).nonce.toString()));
+//console.log("Prefetch: " + (Mina.getAccount(player1).nonce.toString()));
+//await fetchAccount({ publicKey: player1 });
+//console.log("Postfetch: " + (Mina.getAccount(player1).nonce.toString()));
 
-//---------------------------DELETE COMMENT!!!
+
 txn = await Mina.transaction({sender: player1, fee: "100000000", nonce: +(Mina.getAccount(player1).nonce.toString())}, () => {
-  //AccountUpdate.fundNewAccount(player1);
-  //zkApp.deploy();
   zkApp.startGame(player1, player2);
 })
 
-//await measureTime('"Start game" prove', async () => {
+
 title = "prove-startgame";
+
+//START PROFILING start game prove
 v8Profiler.startProfiling(title, true);
+
 await txn.prove();
+
+//STOP PROFILING start game prove
 profile = v8Profiler.stopProfiling(title);
 profile.export(function (error: any, result: any) {
   fs.writeFileSync(`${title}.cpuprofile`, result);
   profile.delete();
 });
-//});
 
-/**
- * note: this tx needs to be signed with `tx.sign()`, because `deploy` uses `requireSignature()` under the hood,
- * so one of the account updates in this tx has to be authorized with a signature (vs proof).
- * this is necessary for the deploy tx because the initial permissions for all account fields are "signature".
- * (but `deploy()` changes some of those permissions to "proof" and adds the verification key that enables proofs.
- * that's why we don't need `tx.sign()` for the later transactions.)
- */
-//---------------------------DELETE COMMENT!!!
-//await measureTime('"Start game" sign', async () => {
 await txn.sign([zkAppPrivateKey, player1Key])
-//})
-//await measureTime('"Start game" send', async () => {
+
 let res = await txn.send();
 
-console.log(
-  'See startGame transaction at',
-  'https://berkeley.minaexplorer.com/transaction/' + res.hash()
-);
 
-//})
+console.log('See startGame transaction at', 'https://berkeley.minaexplorer.com/transaction/' + res.hash());
+
 let b;
-let stateChanged;
+//let stateChanged;
 
 await res.wait();
 
@@ -195,13 +135,13 @@ await fetchAccount({ publicKey: zkAppPublicKey });
 await fetchAccount({ publicKey: player1 });
 
 // to avoid TS errors
-player1Key = player1Key!;
+/*player1Key = player1Key!;
 player1 = player1!;
 player2Key = player2Key!;
 player2 = player2!;
 zkAppPrivateKey = zkAppPrivateKey!;
 zkAppPublicKey = zkAppPublicKey!;
-zkApp = zkApp!;
+zkApp = zkApp!;*/
 
 // initial state
 b = zkApp.board.get();
@@ -212,7 +152,7 @@ while (!stateChanged) {
   await new Promise((resolve) => setTimeout(resolve, 5000));
   await fetchAccount({ publicKey: zkAppPublicKey });
   await fetchAccount({ publicKey: player1 });
-
+  
   stateChanged = !zkApp.board.get().equals(b).toBoolean();
   new Board(zkApp.board.get()).printState();
 }*/
@@ -265,10 +205,7 @@ b = zkApp.board.get();
 new Board(b).printState();
 
 
-console.log(
-  'did someone win?',
-  zkApp.nextIsPlayer2.get().toBoolean() ? 'Player 1!' : 'Player 2!'
-);
+console.log('did someone win?', zkApp.nextIsPlayer2.get().toBoolean() ? 'Player 1!' : 'Player 2!');
 
 // cleanup
 await shutdown();
@@ -282,53 +219,36 @@ async function makeMove(
   const [x, y] = [Field(x0), Field(y0)];
   let nonce: UInt32 = Mina.getAccount(currentPlayer).nonce;
   
-  /*await measureTime('getAccount', async () => {
-    nonce = ;
-    if(!firstPlay) {
-      nonce = nonce.add(1);
-    } else firstPlay = !firstPlay;
-  })*/
-
-  let txn: any;
-//console.log(txn)
-  //await measureTime('"play" transaction', async () => {
-    txn = await Mina.transaction({sender: currentPlayer, fee: "100000000", nonce: +(nonce.toString())}, async () => {
-      //let signature: any;
-
-      //await measureTime('Signature.create', async () => {
-        const signature = Signature.create(currentPlayerKey, [x, y]);
-      //}, 1);
-
-      //await measureTime('zkApp.play', async () => {
-        zkApp.play(currentPlayer, signature, x, y);
-      //}, 1);
-    });
-  //})
-  //console.log(txn)
-  await measureTime('"play" prove', async () => {
-title = `prove${x0.toString()}${y0.toString()}`;
-v8Profiler.startProfiling(title, true);
-
-await txn.prove();
-
-profile = v8Profiler.stopProfiling(title);
-profile.export(function (error: any, result: any) {
-  fs.writeFileSync(`${title}.cpuprofile`, result);
-  profile.delete();
-});
+  let txn: any = await Mina.transaction({sender: currentPlayer, fee: "100000000", nonce: +(nonce.toString())}, async () => {
+    const signature = Signature.create(currentPlayerKey, [x, y]);
+    zkApp.play(currentPlayer, signature, x, y);
   });
   
-  //await measureTime('"play" sign', async () => {
-    txn = await txn.sign([currentPlayerKey]).send()
-  //});
+  //Stampa il tempo necessario per eseguire la funzione "prove"
+  await measureTime('"play" prove', async () => {
+    title = `prove${x0.toString()}${y0.toString()}`;
 
-  /*await measureTime('"play" send', async () => {
-    await txn.send();
-  });*/
-
+    //START PROFILING play prove
+    v8Profiler.startProfiling(title, true);
+    
+    await txn.prove();
+    
+    //STOP PROFILING play prove
+    profile = v8Profiler.stopProfiling(title);
+    profile.export(function (error: any, result: any) {
+      fs.writeFileSync(`${title}.cpuprofile`, result);
+      profile.delete();
+    });
+  });
+  
+  txn = await txn.sign([currentPlayerKey]).send()
+  
   let state = zkApp.board.get();
-  //console.log(state)
+  
   let stateChanged = false;
+  
+  //Stampa il tempo necessario affinché lo stato del contratto cambi
+  //  ovvero attende che la transazione venga aggiunta in un blocco
   await measureTime('"play" state change', async () => {
     while (!stateChanged) {
       await new Promise((resolve) => setTimeout(resolve, 5000));
@@ -336,27 +256,12 @@ profile.export(function (error: any, result: any) {
       await fetchAccount({ publicKey: currentPlayer });
       //console.log(zkApp.board.get())
       stateChanged = !zkApp.board.get().equals(state).toBoolean();
-
     }
   });
 }
 
-/*async function waitNextBlock() {
-  let l = (Mina.getNetworkState()).blockchainLength;
-  console.log(`Current length: ${l}; waiting...`);
-  
-  let resolver;
-  let p = new Promise((r) => resolver = r)
 
-  let i = setInterval({
-    if(l != (await Mina.getNetworkState()).blockchainLength) {
-
-    }
-  }, 1000);
-
-  return p;
-}*/
-
+//Util per stampare il tempo necessario per eseguire il callback
 async function measureTime(str: string, callback: () => Promise<void>, width: number = 0) {
   console.warn(`${"\t".repeat(width)} +++ ${str}:`)
   let start = performance.now();
@@ -364,7 +269,10 @@ async function measureTime(str: string, callback: () => Promise<void>, width: nu
   let end = performance.now();
   console.warn(`${"\t".repeat(width)} --- ${str}: ${end - start}ms`)
 }
+  
 
+//Attende che un certo account venga creato:
+//  source: https://github.com/o1-labs/docs2/blob/main/examples/zkapps/interacting-with-zkApps-server-side/src/utils.ts
 async function loopUntilAccountExists(
   { account,
     eachTimeNotExist,
@@ -390,7 +298,7 @@ async function loopUntilAccountExists(
     }
   }
 };
-
+    
 async function deploy(
   deployerPrivateKey: PrivateKey,
   zkAppPrivateKey: PrivateKey,
@@ -404,10 +312,10 @@ async function deploy(
     'using zkApp private key with public key',
     zkAppPublicKey.toBase58()
   );
-
+  
   let { account } = await fetchAccount({ publicKey: zkAppPublicKey });
   let isDeployed = account?.zkapp?.verificationKey !== undefined;
-
+  
   if (isDeployed) {
     console.log(
       'zkApp for public key',
@@ -426,7 +334,7 @@ async function deploy(
     );
     await transaction.prove();
     transaction.sign([deployerPrivateKey, zkAppPrivateKey]);
-
+    
     console.log('Sending the deploy transaction...');
     const res = await transaction.send();
     const hash = res.hash();
