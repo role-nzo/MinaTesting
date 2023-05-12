@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "networks": {
+    "contract": {
+      "url": "https://proxy.berkeley.minaexplorer.com/graphql",
+      "keyPath": "keys/contract.json",
+      "fee": "0.1",
+      "smartContract": "TicTacToe"
+    },
+    "player1": {
+      "url": "https://proxy.berkeley.minaexplorer.com/graphql",
+      "keyPath": "keys/player1.json",
+      "fee": "0.1"
+    },
+    "player2": {
+      "url": "https://proxy.berkeley.minaexplorer.com/graphql",
+      "keyPath": "keys/player2.json",
+      "fee": "0.1"
+    }
+  }
+}
