@@ -5,13 +5,13 @@ Lorenzo Ziosi<br>
 Prof. Andrea Bartolini<br>
 Supervisors: Nicola Elia, Francesco Barchi*
 
-Nella directory `tictactoe` è presente la zkApp di esempio TicTacToe con una unit di test ([`tictactoe\src\run.ts`](https://github.com/role-nzo/MinaTesting/blob/master/tictactoe/src/run.ts)) rivisitata per supportare la testnet Berkeley. Il repository originale è al seguente link: [TicTacToe (Mina)](https://github.com/o1-labs/zkapp-cli/tree/main/examples/tictactoe/ts/src).
+Nella directory `mina` è presente la zkApp di esempio TicTacToe con una unit di test ([`mina\src\run.ts`](https://github.com/role-nzo/MinaTesting/blob/master/mina/src/run.ts)) rivisitata per supportare la testnet Berkeley. Il repository originale è al seguente link: [TicTacToe (Mina)](https://github.com/o1-labs/zkapp-cli/tree/main/examples/tictactoe/ts/src).
 
 La directory `ethereum` contiene invece un contratto analogo scritto in Solidity per comparare le performance della EVM (network BSC) con quelle di Mina. Il repository originale è al seguente link: [TicTacToe (Solidity)](https://github.com/0xosas/tictactoe.sol/tree/master/contracts).
 
 ## Come eseguire test su mina
 
-Il test ([`tictactoe\src\run.ts`](https://github.com/role-nzo/MinaTesting/blob/master/tictactoe/src/run.ts)) prevede:
+Il test ([`mina\src\run.ts`](https://github.com/role-nzo/MinaTesting/blob/master/mina/src/run.ts)) prevede:
 - deploy di un nuovo contratto TicTacToe (indirizzo casuale generato runtime)
 - transazione per l'inizio di una nuova partita
 - transazione per la prima mossa (giocatore 1)
