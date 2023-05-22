@@ -1,5 +1,10 @@
 # MinaTesting
 
+*__Attività Progettuale di Calcolatori Elettronici M__<br>
+Lorenzo Ziosi<br>
+Prof. Andrea Bartolini<br>
+Supervisors: Nicola Elia, Francesco Barchi*
+
 Nella directory `tictactoe` è presente la zkApp di esempio TicTacToe con una unit di test ([`tictactoe\src\run.ts`](https://github.com/role-nzo/MinaTesting/blob/master/tictactoe/src/run.ts)) rivisitata per supportare la testnet Berkeley. Il repository originale è al seguente link: [TicTacToe (Mina)](https://github.com/o1-labs/zkapp-cli/tree/main/examples/tictactoe/ts/src).
 
 La directory `ethereum` contiene invece un contratto analogo scritto in Solidity per comparare le performance della EVM (network BSC) con quelle di Mina. Il repository originale è al seguente link: [TicTacToe (Solidity)](https://github.com/0xosas/tictactoe.sol/tree/master/contracts).
